@@ -13,28 +13,35 @@ export const taskSlice = createSlice({
       const newTask = {
         id: Date.now().toString(),
         title: action.payload,
-        description: '',
+        description: "",
         done: false,
+        timeStamp: Date.now(),
       };
       const { tasks } = state;
       state.tasks = [newTask, ...tasks];
     },
     updateTask: (state, action) => {
       const updateTask = action.payload;
-      state.tasks = state.tasks.map((taskItem) => {
+      const newTasks = state.tasks.map((taskItem) => {
         if (taskItem.id !== updateTask.id) return taskItem;
 
         return updateTask;
       });
-    },
-    toggleDone: (state, action) => {
-      const updateId = action.payload;
-      state.tasks = state.tasks.map((taskItem) => {
-        if (taskItem.id !== updateId) return taskItem;
 
-        const { done: currentDone } = taskItem;
-        return { ...taskItem, done: !currentDone };
-      });
+      const newTodoTasks = newTasks
+        .filter(({ done }) => !done)
+        .sort(
+          (comparingTask, comparedTask) =>
+            comparedTask.timeStamp - comparingTask.timeStamp
+        );
+      const newDoneTasks = newTasks
+        .filter(({ done }) => done)
+        .sort(
+          (comparingTask, comparedTask) =>
+            comparedTask.timeStamp - comparingTask.timeStamp
+        );
+
+      state.tasks = [...newTodoTasks, ...newDoneTasks];
     },
     deleteTask: (state, action) => {
       const deleteId = action.payload;

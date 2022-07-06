@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Accordion,
   Container,
   Title,
   ActionIcon,
@@ -13,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { addTask, selectTasksList } from "./taskSlice";
 import ListItem from './components/ListItem';
+import { Flipped, Flipper } from "react-flip-toolkit";
 
 export function Tasks() {
   const [task, setTask] = useState("");
@@ -20,7 +20,7 @@ export function Tasks() {
   const dispatch = useDispatch();
   return (
     <>
-      <Container p={12}>
+      <Container p={'md'}>
         <Header height={'3rem'} m={8}>
           <Title>Productivator</Title>
         </Header>
@@ -48,34 +48,18 @@ export function Tasks() {
             autoFocus
             required />
         </form>
-        <Accordion
-          my={12}
-          styles={{ content: { paddingLeft: "0" } }}
-          initialItem={0}
-        >
-          <Accordion.Item label="Tasks">
-            <ScrollArea style={{ height: "60vh" }}>
-              <ul style={{ padding: 0 }}>
-                {taskList
-                  .filter(({ done }) => !done)
-                  .map(taskItem => (
-                    <ListItem key={taskItem.id} {...taskItem} />
-                  ))}
-              </ul>
-            </ScrollArea>
-          </Accordion.Item>
-          <Accordion.Item label="Older Tasks">
-            <ScrollArea style={{ height: "60vh" }}>
-              <ul style={{ padding: 0 }}>
-                {taskList
-                  .filter(({ done }) => done)
-                  .map(taskItem => (
-                    <ListItem key={taskItem.id} {...taskItem} />
-                  ))}
-              </ul>
-            </ScrollArea>
-          </Accordion.Item>
-        </Accordion>
+        <ScrollArea style={{ height: "85vh" }} px={'xs'}>
+          <Flipper flipKey={taskList.map(({timeStamp}) => timeStamp).join('')}>
+          <ul style={{ padding: 0 }}>
+            {taskList
+              .map(taskItem => (
+                <Flipped key={taskItem.id} flipId={taskItem.id}>
+                <ListItem task={taskItem} />
+                </Flipped>
+              ))}
+          </ul>
+          </Flipper>
+        </ScrollArea>
       </Container>
     </>
   );

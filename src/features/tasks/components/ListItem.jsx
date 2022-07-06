@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ActionIcon, Card, Checkbox, Drawer, Group, Text } from "@mantine/core";
 import { useDispatch } from "react-redux";
-import { deleteTask, toggleDone } from "../taskSlice";
+import { deleteTask, updateTask } from "../taskSlice";
 import { AlignRight, ChevronRight, Trash } from "tabler-icons-react";
 import EditTask from "./EditTask";
 import ViewTask from "./ViewTask";
 
-const ListItem = ({ id, title, done, description, ...props }) => {
+const ListItem = ({ task, ...props }) => {
   const [isDrawOpen, setDrawOpen] = useState(false);
   const [isEdit, setEdit] = useState(false);
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const ListItem = ({ id, title, done, description, ...props }) => {
    * TODO:
    *  - Add Transitions to Edit
    */
+  const {id, title, description, done} = task;
   return (
     <>
       <Drawer
@@ -31,7 +32,7 @@ const ListItem = ({ id, title, done, description, ...props }) => {
         }}
       >
         {!isEdit ? (
-          <ViewTask {...{ title, done, description, setEdit, setDrawOpen }} />
+          <ViewTask {...{ ...task, setEdit, setDrawOpen }} />
         ) : (
           <EditTask
             taskId={id}
@@ -41,22 +42,13 @@ const ListItem = ({ id, title, done, description, ...props }) => {
           />
         )}
       </Drawer>
-      <Card
-        key={id}
-        component="li"
-        my={16}
-        {...props}
-        tabIndex={0}
-        onClick={() => {
-          setDrawOpen(true);
-        }}
-      >
+      <Card key={id} component="li" my={16} {...props} tabIndex={0}>
         <Group position="apart">
           <Group>
             <Checkbox
               checked={done}
-              onChange={(e) => {
-                dispatch(toggleDone(id));
+              onChange={() => {
+                dispatch(updateTask({ ...task, done: !task.done }));
               }}
             />
             <Text
@@ -69,8 +61,12 @@ const ListItem = ({ id, title, done, description, ...props }) => {
             </Text>
           </Group>
           <Group>
-            {description?.length && <ActionIcon size={'md'}><AlignRight/></ActionIcon> }
-            {done ? (
+            {description?.length && (
+              <ActionIcon size={"md"}>
+                <AlignRight />
+              </ActionIcon>
+            )}
+            {done && (
               <ActionIcon
                 variant="transparent"
                 color="red"
@@ -81,11 +77,18 @@ const ListItem = ({ id, title, done, description, ...props }) => {
               >
                 <Trash />
               </ActionIcon>
-            ) : (
-              <ActionIcon variant="transparent" color="gray" size={"md"}>
-                <ChevronRight />
-              </ActionIcon>
             )}
+
+            <ActionIcon
+              variant="transparent"
+              color="gray"
+              size={"md"}
+              onClick={() => {
+                setDrawOpen(true);
+              }}
+            >
+              <ChevronRight />
+            </ActionIcon>
           </Group>
         </Group>
       </Card>
