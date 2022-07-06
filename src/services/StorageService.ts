@@ -1,4 +1,4 @@
-const KEY = "BN_STORE";
+const KEY = "PDTR_STORE";
 export function loadState():any {
   try {
     const serializedState = localStorage.getItem(KEY);

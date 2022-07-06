@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 
 export const taskSlice = createSlice({
   name: "tasks",
@@ -7,16 +7,25 @@ export const taskSlice = createSlice({
   },
   reducers: {
     updateTaskList: (state, action) => {
-        state.tasks = action.payload;
+      state.tasks = action.payload;
     },
     addTask: (state, action) => {
       const newTask = {
         id: Date.now().toString(),
-        task: action.payload,
+        title: action.payload,
+        description: '',
         done: false,
       };
       const { tasks } = state;
       state.tasks = [newTask, ...tasks];
+    },
+    updateTask: (state, action) => {
+      const updateTask = action.payload;
+      state.tasks = state.tasks.map((taskItem) => {
+        if (taskItem.id !== updateTask.id) return taskItem;
+
+        return updateTask;
+      });
     },
     toggleDone: (state, action) => {
       const updateId = action.payload;
@@ -36,5 +45,12 @@ export const taskSlice = createSlice({
 
 export const selectTasksList = (state) => state.tasks.tasks;
 
-export const { addTask, toggleDone, deleteTask, updateTaskList } = taskSlice.actions;
+const selectTaskId = (state, taskId) => taskId;
+export const selectTaskById = createSelector(
+  [selectTasksList, selectTaskId],
+  (tasks, taskId) => tasks.find(({ id }) => taskId === id)
+);
+
+export const { addTask, toggleDone, deleteTask, updateTaskList, updateTask } =
+  taskSlice.actions;
 export default taskSlice.reducer;

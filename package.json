@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@mantine/core": "^4.2.10",
+    "@mantine/form": "^4.2.12",
     "@mantine/hooks": "^4.2.10",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
