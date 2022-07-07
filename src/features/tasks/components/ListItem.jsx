@@ -14,10 +14,6 @@ const ListItem = ({ task, ...props }) => {
   useEffect(() => {
     setEdit(false);
   }, [isDrawOpen]);
-  /**
-   * TODO:
-   *  - Add Transitions to Edit
-   */
   const {id, title, description, done} = task;
   return (
     <>
@@ -36,7 +32,7 @@ const ListItem = ({ task, ...props }) => {
         ) : (
           <EditTask
             taskId={id}
-            handleSubmit={() => {
+            goBack={() => {
               setEdit(false);
             }}
           />

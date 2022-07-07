@@ -11,13 +11,9 @@ import {
 } from "@mantine/core";
 import { selectTaskById, updateTask, deleteTask } from "../taskSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { DeviceFloppy, Trash } from "tabler-icons-react";
+import { DeviceFloppy, Trash, X } from "tabler-icons-react";
 
-const EditTask = ({ taskId, handleSubmit }) => {
-  /**
-   * TODO:
-   *  - Validate Title
-   */
+const EditTask = ({ taskId, goBack, style }) => {
   const dispatch = useDispatch();
   const task = useSelector((state) => selectTaskById(state, taskId));
   const form = useForm({
@@ -32,9 +28,10 @@ const EditTask = ({ taskId, handleSubmit }) => {
   });
   return (
     <form
+      style={style}
       onSubmit={form.onSubmit((data) => {
         dispatch(updateTask({ ...task, ...data }));
-        handleSubmit();
+        goBack();
       })}
     >
       <Stack justify={"space-between"} style={{ height: "100%" }}>
@@ -45,22 +42,33 @@ const EditTask = ({ taskId, handleSubmit }) => {
             placeholder={"Task Title"}
             required
           ></TextInput>
-          <Textarea {...form.getInputProps("description")} minRows={6} my={"md"} placeholder={"Description of the Task"}></Textarea>
+          <Textarea
+            {...form.getInputProps("description")}
+            minRows={6}
+            my={"md"}
+            placeholder={"Description of the Task"}
+          ></Textarea>
           <Switch {...form.getInputProps("done")} label={"Done"} />
         </Container>
         <Group position={"right"} mt="xl">
           <Button
+            style={{
+              transition: 'all 0.3s ease-in-out'
+            }}
             color={"red"}
             leftIcon={<Trash />}
             variant={form.values.done ? "outline" : "subtle"}
             onClick={() => {
               dispatch(deleteTask(taskId));
-              handleSubmit();
+              goBack();
             }}
           >
             Delete
           </Button>
-          <Button mx={'md'} leftIcon={<DeviceFloppy />} type="submit">
+          <Button leftIcon={<X />} color={"orange"} variant={"outline"} onClick={goBack}>
+            Cancel
+          </Button>
+          <Button leftIcon={<DeviceFloppy />} type="submit">
             Save
           </Button>
         </Group>
