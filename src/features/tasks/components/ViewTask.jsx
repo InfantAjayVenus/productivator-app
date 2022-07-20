@@ -7,45 +7,64 @@ import {
   Stack,
   Button,
   Badge,
+  Checkbox,
 } from "@mantine/core";
-import { Pencil, Trash } from "tabler-icons-react";
+import { X } from "tabler-icons-react";
 import { useDispatch } from "react-redux";
-import { deleteTask } from "../taskSlice";
+import { updateTask } from "../taskSlice";
+import EditableType from "./EditableType.tsx";
 
-const ViewTask = ({ id, title, done, description, setEdit, setDrawOpen }) => {
+const ViewTask = ({ id, title, done, description, drawToggle }) => {
   const dispatch = useDispatch();
   return (
     <>
       <Stack justify={"space-between"} style={{ height: "90%" }}>
-        <Container style={{width: '100%'}}>
+        <Container style={{ width: "100%" }}>
           <Group position="apart" my={"lg"} style={{ width: "100%" }}>
-            <Title order={3}>{title}</Title>
+            <Group>
+              <Checkbox
+                checked={done}
+                onChange={() => {
+                  dispatch(updateTask({ id, title, description, done: !done }));
+                }}
+              />
+              <EditableType
+                TypeComponent={Title}
+                TypeComponentProps={{ order: 3 }}
+                text={title}
+                textSize={"lg"}
+                setText={(updatedTitle) => {
+                  dispatch(
+                    updateTask({ id, description, done, title: updatedTitle })
+                  );
+                }}
+              />
+            </Group>
             <Badge color={`${done ? "green" : "gray"}`}>
               {done ? "DONE" : "TODO"}
             </Badge>
           </Group>
-          <Text>{description}</Text>
+          <EditableType
+            TypeComponent={Text}
+            text={description}
+            inputType="textarea"
+            setText={(updatedDescription) => {
+              dispatch(
+                updateTask({ id, title, done, description: updatedDescription })
+              );
+            }}
+          />
         </Container>
         <Group position="right">
           <Button
-            variant={done ? "outline" : "subtle"}
-            color={'red'}
-            leftIcon={<Trash />}
+            variant={'outline'}
+            color={"red"}
+            leftIcon={<X />}
             onClick={() => {
-              dispatch(deleteTask(id));
-              setDrawOpen(false);
+              drawToggle();
             }}
           >
-            Delete
-          </Button>
-          <Button
-            variant="outline"
-            leftIcon={<Pencil />}
-            onClick={() => {
-              setEdit(true);
-            }}
-          >
-            Edit
+            Close
           </Button>
         </Group>
       </Stack>

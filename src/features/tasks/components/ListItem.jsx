@@ -1,44 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { ActionIcon, Card, Checkbox, Drawer, Group, Text } from "@mantine/core";
+import React, { useState } from "react";
+import { Card, Checkbox, Drawer, Group, Menu, Text } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { deleteTask, updateTask } from "../taskSlice";
-import { AlignRight, ChevronRight, Trash } from "tabler-icons-react";
-import EditTask from "./EditTask";
+import { AlignRight, ArrowsDiagonal, Trash } from "tabler-icons-react";
 import ViewTask from "./ViewTask";
+import { useDisclosure } from "@mantine/hooks";
 
 const ListItem = ({ task, ...props }) => {
-  const [isDrawOpen, setDrawOpen] = useState(false);
+  const [drawState, drawHandlers] = useDisclosure(false);
   const [isEdit, setEdit] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setEdit(false);
-  }, [isDrawOpen]);
-  const {id, title, description, done} = task;
+  
+  const { id, title, description, done } = task;
   return (
     <>
       <Drawer
-        opened={isDrawOpen}
-        title={`${isEdit ? "Edit" : "View"} Task`}
+        opened={drawState}
+        title={`View Task`}
         size="xl"
         padding="xl"
         position="right"
-        onClose={() => {
-          setDrawOpen(false);
-        }}
+        onClose={drawHandlers.close}
       >
-        {!isEdit ? (
-          <ViewTask {...{ ...task, setEdit, setDrawOpen }} />
-        ) : (
-          <EditTask
-            taskId={id}
-            goBack={() => {
-              setEdit(false);
-            }}
-          />
-        )}
+        <ViewTask {...{ ...task, isEdit, setEdit, drawToggle: drawHandlers.toggle }} />
       </Drawer>
-      <Card key={id} component="li" my={16} {...props} tabIndex={0}>
+      <Card
+        key={id}
+        component="li"
+        my={16}
+        py={0}
+        px={"sm"}
+        {...props}
+        tabIndex={0}
+      >
         <Group position="apart">
           <Group>
             <Checkbox
@@ -52,41 +47,33 @@ const ListItem = ({ task, ...props }) => {
               transform="capitalize"
               size="lg"
               mx={"auto"}
-              {...(done && { color: "dimmed", style: { textDecoration: 'line-through'} })}
+              {...(done && {
+                color: "dimmed",
+                style: { textDecoration: "line-through" },
+              })}
               inline
             >
               {title}
             </Text>
           </Group>
           <Group>
-            {description?.length && (
-              <ActionIcon size={"md"}>
-                <AlignRight />
-              </ActionIcon>
-            )}
-            {done && (
-              <ActionIcon
-                variant="transparent"
-                color="red"
-                size={"lg"}
-                onClick={(e) => {
-                  dispatch(deleteTask(id));
-                }}
-              >
-                <Trash />
-              </ActionIcon>
-            )}
+            {description?.length && <AlignRight />}
 
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              size={"md"}
-              onClick={() => {
-                setDrawOpen(true);
-              }}
+            <Menu
+              shadow={"xl"}
+              styles={(theme) => ({
+                body: { background: theme.colors.dark[5] },
+              })}
             >
-              <ChevronRight />
-            </ActionIcon>
+              <Menu.Item icon={<ArrowsDiagonal />} onClick={drawHandlers.open}>Expand</Menu.Item>
+              <Menu.Item
+                color={"red"}
+                icon={<Trash size={14} />}
+                onClick={() => dispatch(deleteTask(id))}
+              >
+                Delete
+              </Menu.Item>
+            </Menu>
           </Group>
         </Group>
       </Card>

@@ -38,9 +38,10 @@ export function Tasks() {
             id="add-task"
             placeholder="Enter task here"
             value={task}
-            style={{ width: "100%", padding: "0 0.5rem" }}
+            style={{ width: "100%", padding: "0.25rem 0.5rem" }}
             onChange={(e) => {
               setTask(e.target.value);
+              e.target.focus();
             }}
             rightSection={<ActionIcon color={"blue"} variant={"light"} type={"submit"}>
               <Plus />
@@ -49,15 +50,15 @@ export function Tasks() {
             required />
         </form>
         <ScrollArea style={{ height: "85vh" }} px={'xs'}>
-          <Flipper flipKey={taskList.map(({timeStamp}) => timeStamp).join('')}>
-          <ul style={{ padding: 0 }}>
-            {taskList
-              .map(taskItem => (
-                <Flipped key={taskItem.id} flipId={taskItem.id}>
-                <ListItem task={taskItem} />
-                </Flipped>
-              ))}
-          </ul>
+          <Flipper flipKey={taskList.map(({ timeStamp }) => timeStamp).join('')}>
+            <ul style={{ padding: 0 }}>
+              {taskList
+                .map(taskItem => (
+                  <Flipped key={taskItem.id} flipId={taskItem.id}>
+                    <ListItem task={taskItem} />
+                  </Flipped>
+                ))}
+            </ul>
           </Flipper>
         </ScrollArea>
       </Container>
