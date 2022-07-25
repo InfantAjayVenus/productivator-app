@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Container,
   Title,
@@ -10,7 +10,8 @@ import {
 import { Plus } from "tabler-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addTask, selectTasksList } from "./taskSlice";
+import { addTask, selectTasksList,deleteTask } from "./taskSlice";
+
 import ListItem from './components/ListItem';
 import { Flipped, Flipper } from "react-flip-toolkit";
 
@@ -18,6 +19,22 @@ export function Tasks() {
   const [task, setTask] = useState("");
   const taskList = useSelector(selectTasksList);
   const dispatch = useDispatch();
+
+  const clearTasks = ()=>{
+    taskList.map((task)=>{
+      if(task.doneTimeStamp!=0){
+        if (Math.abs(task.doneTimeStamp - Date.now()) / 1000 / 60 / 60 / 24 > 2){
+          dispatch(deleteTask(task.id));
+        }
+      }
+    })
+  }
+  useEffect(()=>{
+    const interval=setInterval(()=>clearTasks(),5000);
+    return () =>{
+      clearInterval(interval);
+    }
+  },[taskList])
   return (
     <>
       <Container p={'md'}>
