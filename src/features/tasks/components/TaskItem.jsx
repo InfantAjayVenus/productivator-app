@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { Card, Checkbox, Drawer, Group, Menu, Text } from "@mantine/core";
+import { ActionIcon, Checkbox, Container, createStyles, Drawer, Group, Menu, Text } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { deleteTask, updateTask } from "../taskSlice";
-import { AlignRight, ArrowsDiagonal, Trash } from "tabler-icons-react";
+import { AlignRight, ArrowsDiagonal, Dots, Trash } from "tabler-icons-react";
 import ViewTask from "./ViewTask";
 import { useDisclosure } from "@mantine/hooks";
 
-const ListItem = ({ task, ...props }) => {
+const useContainerStyles = createStyles((theme) => ({
+  container: {
+    borderBottom: `1px solid ${theme.colors.dark[4]}`,
+
+    '&:hover': {
+      backgroundColor: theme.colors.dark[6]
+    }
+  }
+}))
+
+const TaskItem = ({ task, ...props }) => {
   const [drawState, drawHandlers] = useDisclosure(false);
   const [isEdit, setEdit] = useState(false);
   const dispatch = useDispatch();
+  const {classes} = useContainerStyles();
 
-  
   const { id, title, description, done } = task;
   return (
     <>
@@ -23,19 +33,19 @@ const ListItem = ({ task, ...props }) => {
         position="right"
         onClose={drawHandlers.close}
       >
-        <ViewTask {...{ ...task, isEdit, setEdit, drawToggle: drawHandlers.toggle }} />
+        {drawState && <ViewTask
+          {...{ ...task, isEdit, setEdit, drawToggle: drawHandlers.toggle }}
+        />}
       </Drawer>
-      <Card
-        key={id}
-        component="li"
-        my={16}
+      <Container
         py={0}
         px={"sm"}
         {...props}
         tabIndex={0}
+        className={classes.container}
       >
-        <Group position="apart">
-          <Group>
+        <Group position="apart" noWrap>
+          <Group >
             <Checkbox
               checked={done}
               onChange={() => {
@@ -46,12 +56,10 @@ const ListItem = ({ task, ...props }) => {
               component="p"
               transform="capitalize"
               size="lg"
-              mx={"auto"}
               {...(done && {
                 color: "dimmed",
                 style: { textDecoration: "line-through" },
               })}
-              inline
             >
               {title}
             </Text>
@@ -60,25 +68,34 @@ const ListItem = ({ task, ...props }) => {
             {description?.length && <AlignRight />}
 
             <Menu
-              shadow={"xl"}
               styles={(theme) => ({
                 body: { background: theme.colors.dark[5] },
               })}
             >
-              <Menu.Item icon={<ArrowsDiagonal />} onClick={drawHandlers.open}>Expand</Menu.Item>
-              <Menu.Item
-                color={"red"}
-                icon={<Trash size={14} />}
-                onClick={() => dispatch(deleteTask(id))}
-              >
-                Delete
-              </Menu.Item>
+              <Menu.Target>
+                <ActionIcon><Dots /></ActionIcon>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  icon={<ArrowsDiagonal />}
+                  onClick={drawHandlers.open}
+                >
+                  Expand
+                </Menu.Item>
+                <Menu.Item
+                  color={"red"}
+                  icon={<Trash size={14} />}
+                  onClick={() => dispatch(deleteTask(id))}
+                >
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
             </Menu>
           </Group>
         </Group>
-      </Card>
+      </Container>
     </>
   );
 };
 
-export default ListItem;
+export default TaskItem;

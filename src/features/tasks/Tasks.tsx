@@ -1,64 +1,83 @@
-import React, { useState } from "react";
+import React from "react";
+import { Flipped, Flipper } from "react-flip-toolkit";
+import { FlipId } from "flip-toolkit/lib/types";
 import {
   Container,
   Title,
   ActionIcon,
   TextInput,
+  List,
   ScrollArea,
-  Header,
+  Group,
+  Menu,
 } from "@mantine/core";
-import { Plus } from "tabler-icons-react";
+import { useForm } from "@mantine/form";
+import { useFocusTrap } from "@mantine/hooks";
+import { Dots, Plus, Trash } from "tabler-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addTask, selectTasksList } from "./taskSlice";
-import ListItem from './components/ListItem';
-import { Flipped, Flipper } from "react-flip-toolkit";
+import { addTask, selectTasksListBySection } from "./taskSlice";
+import TaskItem from './components/TaskItem';
+import { Task } from './Task.d'
+import { deleteSection, selectActiveSection } from "../sections/sectionSlice";
 
 export function Tasks() {
-  const [task, setTask] = useState("");
-  const taskList = useSelector(selectTasksList);
+  const form = useForm({
+    initialValues: {
+      task: '',
+    },
+    validate: {
+      task: (value) => value.length ? null : "Task should not be empty"
+    }
+  })
+  const sectionInfo = useSelector(selectActiveSection);
+  const taskList = useSelector((state) => selectTasksListBySection(state, sectionInfo.id)) as Task[];
+  const focusRef = useFocusTrap(true);
   const dispatch = useDispatch();
   return (
     <>
       <Container p={'md'}>
-        <Header height={'3rem'} m={8}>
-          <Title>Productivator</Title>
-        </Header>
+        <Group position="apart" my={'xs'}>
+          <Title order={2}>{sectionInfo.name}</Title>
+          <Menu>
+            <Menu.Target>
+              <ActionIcon><Dots /></ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item icon={<Trash />} color={'red'} onClick={() => {dispatch(deleteSection(sectionInfo.id))}}>Delete</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!task.trim().length)
-              return;
-            dispatch(addTask(task));
-            setTask("");
-          }}
+          ref={focusRef}
+          onSubmit={form.onSubmit(({ task }) => {
+            dispatch(addTask({ title: task, sectionId: sectionInfo.id }));
+            form.reset();
+          })}
         >
           <TextInput
-            id="add-task"
+            data-autofocus
             placeholder="Enter task here"
-            value={task}
             style={{ width: "100%", padding: "0.25rem 0.5rem" }}
-            onChange={(e) => {
-              setTask(e.target.value);
-              e.target.focus();
-            }}
+            {...form.getInputProps('task')}
             rightSection={<ActionIcon color={"blue"} variant={"light"} type={"submit"}>
               <Plus />
             </ActionIcon>}
             autoFocus
             required />
         </form>
-        <ScrollArea style={{ height: "85vh" }} px={'xs'}>
+        <ScrollArea style={{ height: "75vh" }} px={'xs'}>
           <Flipper flipKey={taskList.map(({ timeStamp }) => timeStamp).join('')}>
-            <ul style={{ padding: 0 }}>
+            <List listStyleType={'none'}>
               {taskList
                 .map(taskItem => (
-                  <Flipped key={taskItem.id} flipId={taskItem.id}>
-                    <ListItem task={taskItem} />
+                  <Flipped key={taskItem.id as React.Key} flipId={taskItem.id as FlipId}>
+                    <List.Item key={taskItem.id as React.Key}>
+                      <TaskItem task={taskItem} />
+                    </List.Item>
                   </Flipped>
                 ))}
-            </ul>
+            </List>
           </Flipper>
         </ScrollArea>
       </Container>

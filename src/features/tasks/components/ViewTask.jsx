@@ -8,6 +8,7 @@ import {
   Button,
   Badge,
   Checkbox,
+  ScrollArea,
 } from "@mantine/core";
 import { X } from "tabler-icons-react";
 import { useDispatch } from "react-redux";
@@ -19,45 +20,55 @@ const ViewTask = ({ id, title, done, description, drawToggle }) => {
   return (
     <>
       <Stack justify={"space-between"} style={{ height: "90%" }}>
-        <Container style={{ width: "100%" }}>
-          <Group position="apart" my={"lg"} style={{ width: "100%" }}>
-            <Group>
-              <Checkbox
-                checked={done}
-                onChange={() => {
-                  dispatch(updateTask({ id, title, description, done: !done }));
-                }}
-              />
-              <EditableType
-                TypeComponent={Title}
-                TypeComponentProps={{ order: 3 }}
-                text={title}
-                textSize={"lg"}
-                setText={(updatedTitle) => {
-                  dispatch(
-                    updateTask({ id, description, done, title: updatedTitle })
-                  );
-                }}
-              />
+        <ScrollArea>
+          <Container style={{ width: "100%" }}>
+            <Group position="apart" my={"lg"} style={{ width: "100%" }}>
+              <Group>
+                <Checkbox
+                  checked={done}
+                  onChange={() => {
+                    dispatch(
+                      updateTask({ id, title, description, done: !done })
+                    );
+                  }}
+                />
+                <EditableType
+                  TypeComponent={Title}
+                  TypeComponentProps={{ order: 3 }}
+                  text={title}
+                  textSize={"lg"}
+                  setText={(updatedTitle) => {
+                    dispatch(
+                      updateTask({ id, description, done, title: updatedTitle })
+                    );
+                  }}
+                />
+              </Group>
+              <Badge color={`${done ? "green" : "gray"}`}>
+                {done ? "DONE" : "TODO"}
+              </Badge>
             </Group>
-            <Badge color={`${done ? "green" : "gray"}`}>
-              {done ? "DONE" : "TODO"}
-            </Badge>
-          </Group>
-          <EditableType
-            TypeComponent={Text}
-            text={description}
-            inputType="textarea"
-            setText={(updatedDescription) => {
-              dispatch(
-                updateTask({ id, title, done, description: updatedDescription })
-              );
-            }}
-          />
-        </Container>
+            <EditableType
+              TypeComponent={Text}
+              text={description}
+              inputType="textarea"
+              setText={(updatedDescription) => {
+                dispatch(
+                  updateTask({
+                    id,
+                    title,
+                    done,
+                    description: updatedDescription,
+                  })
+                );
+              }}
+            />
+          </Container>
+        </ScrollArea>
+
         <Group position="right">
           <Button
-            variant={'outline'}
+            variant={"outline"}
             color={"red"}
             leftIcon={<X />}
             onClick={() => {

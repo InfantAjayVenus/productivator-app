@@ -1,31 +1,33 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, nanoid } from "@reduxjs/toolkit";
 
 export const taskSlice = createSlice({
   name: "tasks",
   initialState: {
-    tasks: [],
+    tasksList: [],
   },
   reducers: {
     updateTaskList: (state, action) => {
-      state.tasks = action.payload;
+      state.tasksList = action.payload;
     },
     addTask: (state, action) => {
+      const {title, sectionId} = action.payload;
       const newTask = {
-        id: Date.now().toString(),
-        title: action.payload,
+        id: nanoid(),
+        title,
         description: "",
         done: false,
         timeStamp: Date.now(),
+        sectionId
       };
-      const { tasks } = state;
-      state.tasks = [newTask, ...tasks];
+      const { tasksList: tasks } = state;
+      state.tasksList = [newTask, ...tasks];
     },
     updateTask: (state, action) => {
       const updateTask = action.payload;
-      const newTasks = state.tasks.map((taskItem) => {
+      const newTasks = state.tasksList.map((taskItem) => {
         if (taskItem.id !== updateTask.id) return taskItem;
 
-        return updateTask;
+        return {...taskItem , ...updateTask};
       });
 
       const newTodoTasks = newTasks
@@ -41,23 +43,28 @@ export const taskSlice = createSlice({
             comparedTask.timeStamp - comparingTask.timeStamp
         );
 
-      state.tasks = [...newTodoTasks, ...newDoneTasks];
+      state.tasksList = [...newTodoTasks, ...newDoneTasks];
     },
     deleteTask: (state, action) => {
       const deleteId = action.payload;
-      state.tasks = state.tasks.filter(({ id }) => id !== deleteId);
+      state.tasksList = state.tasksList.filter(({ id }) => id !== deleteId);
     },
   },
 });
 
-export const selectTasksList = (state) => state.tasks.tasks;
+export const selectTasksListBySection = createSelector(
+  [
+    state => state.tasks.tasksList,
+    (state, sectionId) => sectionId
+  ],
+  (taskList, activeSectionId) => taskList.filter(({sectionId}) => sectionId === activeSectionId)
+);
 
-const selectTaskId = (state, taskId) => taskId;
 export const selectTaskById = createSelector(
-  [selectTasksList, selectTaskId],
+  [state => state.tasks.tasksList, (state, taskId) => taskId],
   (tasks, taskId) => tasks.find(({ id }) => taskId === id)
 );
 
-export const { addTask, toggleDone, deleteTask, updateTaskList, updateTask } =
+export const { addTask, deleteTask, updateTaskList, updateTask } =
   taskSlice.actions;
 export default taskSlice.reducer;
