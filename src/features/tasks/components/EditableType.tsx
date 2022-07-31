@@ -34,7 +34,19 @@ function EditableType({ text, setText, TypeComponent, TypeComponentProps, inputT
                 })}>
                     {inputType === 'text' ?
                         <TextInput variant={'default'} {...form.getInputProps('text')} onBlur={setEdit.close} placeholder={placeHolder as string} autoFocus></TextInput> :
-                        <Textarea minRows={4} maxRows={8} {...form.getInputProps('text')} onBlur={() => {setText(form.values.text); setEdit.close()}} placeholder={placeHolder as string} autosize autoFocus></Textarea>
+                        <Textarea 
+                            minRows={4} 
+                            maxRows={8} 
+                            {...form.getInputProps('text')} 
+                            onBlur={() => {
+                                if(form.values.text.length === 0) return;
+                                setText(form.values.text); 
+                                setEdit.close();
+                            }} 
+                            placeholder={placeHolder as string} 
+                            autosize 
+                            autoFocus
+                        ></Textarea>
                     }
                     <Group position='right' mt={'sm'}>
                         <ActionIcon<'button'> component='button' type='submit' color={'green'} variant='light' onClick={() => { setText(form.values.text); setEdit.close() }}><Check size={16} /></ActionIcon>
