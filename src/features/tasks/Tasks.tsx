@@ -18,6 +18,7 @@ import { Flipped, Flipper } from "react-flip-toolkit";
 import TaskItem from "./components/TaskItem";
 import { Task } from './Task.d';
 import { FlipId } from "flip-toolkit/lib/types";
+import { selectActiveSection } from "../sections/sectionSlice";
 
 export function Tasks() {
   const form = useForm({
@@ -31,17 +32,18 @@ export function Tasks() {
 
   const focusRef = useFocusTrap(true);
   const focusReturn = useFocusReturn({opened: true});
-  const taskList: Task[] = useSelector(selectTasksList);
+  const activeSection = useSelector(selectActiveSection);
+  const taskList: Task[] = useSelector((state) => selectTasksList(state, activeSection.id));
   const dispatch = useDispatch();
   return (
     <>
       <Container p={'md'}>
         <Header height={'3rem'} m={8}>
-          <Title>Productivator</Title>
+          <Title order={3}>{activeSection.name}</Title>
         </Header>
         <form
           onSubmit={form.onSubmit(({task}) => {
-            dispatch(addTask(task));
+            dispatch(addTask({title: task, sectionId: activeSection.id}));
             form.reset();
             focusReturn();
           })}

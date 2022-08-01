@@ -1,4 +1,5 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { DEFAULT_SECTION_ID } from "../sections/sectionSlice";
 import {Task} from './Task.d';
 
 export const taskSlice = createSlice({
@@ -11,9 +12,11 @@ export const taskSlice = createSlice({
       state.tasksList = action.payload;
     },
     addTask: (state, action) => {
+      const {sectionId, title} = action.payload;
       const newTask = {
         id: Date.now().toString(),
-        title: action.payload,
+        sectionId,
+        title,
         description: "",
         done: false,
         timeStamp: Date.now(),
@@ -51,7 +54,14 @@ export const taskSlice = createSlice({
   },
 });
 
-export const selectTasksList = (state) => state.tasks.tasksList;
+export const selectTasksList = createSelector([
+  (state) => state.tasks.tasksList,
+  (_, sectionId) => sectionId,
+], (tasksList, sectionId) => {
+  if(sectionId === DEFAULT_SECTION_ID) return tasksList;
+
+  return tasksList.filter(({sectionId: itemSectionId}) => itemSectionId === sectionId);
+});
 
 export const selectTaskById = createSelector(
   [selectTasksList, (_, taskId) => taskId],
