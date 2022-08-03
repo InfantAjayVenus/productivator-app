@@ -13,9 +13,10 @@ import { X } from "tabler-icons-react";
 import { useDispatch } from "react-redux";
 import { updateTask } from "../taskSlice";
 import EditableType from "./EditableType.tsx";
+import EditableDate from './EditableDate';
 
 const ViewTask = ({ task, drawToggle }) => {
-  const {id, title, description, done} = task;
+  const {title, description, done} = task;
   const dispatch = useDispatch();
   return (
     <>
@@ -45,10 +46,25 @@ const ViewTask = ({ task, drawToggle }) => {
               {done ? "DONE" : "TODO"}
             </Badge>
           </Group>
+          <EditableDate 
+            TypeComponent={Text}
+            TypeComponentProps={{color: 'dimmed', pt: 0, size: 'sm'}}
+            placeHolder={'Pick a due date'}
+            date={new Date(task.dueDateStamp)}
+            setDate={(date) => {
+              dispatch(
+                updateTask({...task, dueDateStamp: date.getTime()})
+              )
+            }}
+          />
           <EditableType
             TypeComponent={Text}
+            TypeComponentProps={{
+              mt: 'md'
+            }}
             text={description}
             inputType="textarea"
+            placeholder={'Enter Task Description'}
             setText={(updatedDescription) => {
               dispatch(
                 updateTask({ ...task, description: updatedDescription })

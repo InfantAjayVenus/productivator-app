@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActionIcon, Checkbox, Container, createStyles, Drawer, Group, Menu, Text } from "@mantine/core";
+import { ActionIcon, Checkbox, Container, createStyles, Drawer, Group, Menu, Stack, Text } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { deleteTask, updateTask } from "../taskSlice";
 import { AlignRight, ArrowsDiagonal, Dots, Trash } from "tabler-icons-react";
@@ -22,7 +22,9 @@ const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
   const {classes} = useContainerStyles();
 
-  const { id, title, description, done } = task;
+  const { id, title, description, done, dueDateStamp } = task;
+  const dueDate = (!isNaN(dueDateStamp)) ? new Date(dueDateStamp) : null;
+  console.log(dueDate);
   return (
     <>
       <Drawer
@@ -51,10 +53,11 @@ const TaskItem = ({ task }) => {
                 dispatch(updateTask({ ...task, done: !task.done }));
               }}
             />
+            <Stack spacing={0}>
             <Text
               component="p"
               transform="capitalize"
-              size={["sm", "md"]}
+              size={'md'}
               py={0}
               my={0}
               {...(done && {
@@ -64,6 +67,10 @@ const TaskItem = ({ task }) => {
             >
               {title}
             </Text>
+            {dueDate &&
+              <Text color={'dimmed'} size={'xs'}>{dueDate.toLocaleDateString()}</Text>
+            }
+            </Stack>
           </Group>
           <Group>
             {description?.length && <AlignRight />}

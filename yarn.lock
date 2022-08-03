@@ -1606,6 +1606,13 @@
     "@radix-ui/react-scroll-area" "1.0.0"
     react-textarea-autosize "8.3.4"
 
+"@mantine/dates@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-5.0.2.tgz#c5b2a08b18d717891200103e46d254925d0b4c05"
+  integrity sha512-t3O1TfYoINrX9y9zArbzA90I+SOc+5HR8za/rOaDl9UMCO+uxl9cgiek+B0GSsL0FQRZzE7pDpbltexzUvKvfg==
+  dependencies:
+    "@mantine/utils" "5.0.2"
+
 "@mantine/form@5":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@mantine/form/-/form-5.0.2.tgz#9d13fcdddd9f7bdd6c164cc78b53d29cd86d2db3"
@@ -3712,6 +3719,11 @@ data-urls@^2.0.0:
     abab "^2.0.3"
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
+
+dayjs@^1.11.4:
+  version "1.11.4"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.4.tgz#3b3c10ca378140d8917e06ebc13a4922af4f433e"
+  integrity sha512-Zj/lPM5hOvQ1Bf7uAvewDaUcsJoI6JmNqmHhHl3nyumwe0XHwt8sWdOVAPACJzCebL8gQCi+K49w7iKWnGwX9g==
 
 debug@2.6.9, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
