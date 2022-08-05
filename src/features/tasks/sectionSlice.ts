@@ -1,5 +1,5 @@
 import { createSelector, createSlice, nanoid } from '@reduxjs/toolkit';
-import {SectionId, SectionItem} from './Section.d';
+import {SectionId, SectionItem} from '../../types/Section';
 
 export const DEFAULT_SECTION_ID = "ALL" as SectionId
 

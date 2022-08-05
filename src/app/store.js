@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import taskReducer from '../features/tasks/taskSlice';
-import sectionReducer from '../features/sections/sectionSlice';
+import sectionReducer from '../features/tasks/sectionSlice';
 import {loadState} from '../services/StorageService.ts';
 
 export const store = configureStore({

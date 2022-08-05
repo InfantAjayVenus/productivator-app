@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { X } from "tabler-icons-react";
 import { useDispatch } from "react-redux";
-import { updateTask } from "../taskSlice";
+import { updateTask } from "../../features/tasks/taskSlice";
 import EditableType from "./EditableType.tsx";
 import EditableDate from './EditableDate';
 

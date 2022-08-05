@@ -2,7 +2,7 @@ import { ActionIcon, List, TextInput, UnstyledButton } from '@mantine/core'
 import { useDispatch, useSelector } from 'react-redux'
 import React from 'react'
 import { Plus } from 'tabler-icons-react';
-import { addSection, selectActiveSection, selectSectionList, setActiveSection } from './sectionSlice';
+import { addSection, selectActiveSection, selectSectionList, setActiveSection } from '../../features/tasks/sectionSlice';
 import { useForm } from '@mantine/form';
 
 function TaskSections({ close }) {

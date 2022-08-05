@@ -1,4 +1,4 @@
-import { SectionId } from "../sections/Section";
+import { SectionId } from "./Section.d";
 
 export interface Task {
     id: String,

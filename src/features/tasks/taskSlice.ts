@@ -1,6 +1,6 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { DEFAULT_SECTION_ID } from "../sections/sectionSlice";
-import {Task} from './Task.d';
+import { DEFAULT_SECTION_ID } from "./sectionSlice";
+import {Task} from '../../types/Task';
 
 export const taskSlice = createSlice({
   name: "tasks",

@@ -14,15 +14,15 @@ import { useForm } from '@mantine/form';
 import { Dots, Plus, Trash } from "tabler-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addTask, selectTasksList } from "./taskSlice";
+import { addTask, selectTasksList } from "../../features/tasks/taskSlice";
 import { Flipped, Flipper } from "react-flip-toolkit";
-import TaskItem from "./components/TaskItem";
-import { Task } from './Task.d';
+import TaskItem from "../components/TaskItem";
+import { Task } from '../../types/Task';
 import { FlipId } from "flip-toolkit/lib/types";
 
-import { DEFAULT_SECTION_ID, deleteSection, selectActiveSection } from "../sections/sectionSlice";
+import { DEFAULT_SECTION_ID, deleteSection, selectActiveSection } from "../../features/tasks/sectionSlice";
 
-export function Tasks() {
+export default function Tasks() {
   const form = useForm({
     initialValues: {
       task: '',
@@ -82,7 +82,7 @@ export function Tasks() {
             <List listStyleType={'none'} my={'xs'}>
               {taskList
                 .map(taskItem => (
-                  <Flipped flipId={taskItem.id as FlipId}>
+                  <Flipped flipId={taskItem.id as FlipId} key={taskItem.id as React.Key}>
                     <List.Item key={taskItem.id as React.Key}>
                       <TaskItem task={taskItem} />
                     </List.Item>

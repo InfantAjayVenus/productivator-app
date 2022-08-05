@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActionIcon, Checkbox, Container, createStyles, Drawer, Group, Menu, Stack, Text } from "@mantine/core";
 import { useDispatch } from "react-redux";
-import { deleteTask, updateTask } from "../taskSlice";
+import { deleteTask, updateTask } from "../../features/tasks/taskSlice";
 import { AlignRight, ArrowsDiagonal, Dots, Trash } from "tabler-icons-react";
 import ViewTask from "./ViewTask";
 import { useDisclosure } from "@mantine/hooks";
@@ -86,12 +86,14 @@ const TaskItem = ({ task }) => {
               </Menu.Target>
               <Menu.Dropdown>
                 <Menu.Item
+                  key={'open'}
                   icon={<ArrowsDiagonal />}
                   onClick={drawHandlers.open}
                 >
                   Open
                 </Menu.Item>
                 <Menu.Item
+                  key={'delete'}
                   color={"red"}
                   icon={<Trash size={14} />}
                   onClick={() => dispatch(deleteTask(id))}

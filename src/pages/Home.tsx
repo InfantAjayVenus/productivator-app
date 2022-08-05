@@ -4,38 +4,33 @@ import {
   Drawer,
   Group,
   Header,
-  MantineProvider,
   Title,
 } from "@mantine/core";
-import { Tasks } from "./features/tasks/Tasks";
-import Sections from "./features/sections/Sections";
 import { useDisclosure } from "@mantine/hooks";
+import TaskSections from "./layout-components/Sections";
+import Tasks from "./layout-components/Tasks";
 
-function App() {
+function Home() {
   const [isDrawOpen, drawHandle] = useDisclosure(false);
 
   return (
-    <MantineProvider
-      theme={{ colorScheme: "dark", overflow: 'hidden' }}
-      withGlobalStyles
-      withNormalizeCSS
-    >
-      <Header px={"md"} py={"xs"}>
+    <>
+      <Header height={'3rem'} px={"md"} py={"xs"}>
         <Group position="apart">
           <Title order={3}>Productivator</Title>
-          <Burger size={'sm'} onClick={drawHandle.toggle} />
+          <Burger opened={isDrawOpen} size={'sm'} onClick={drawHandle.toggle} />
         </Group>
       </Header>
       <nav>
         <Drawer opened={isDrawOpen} onClose={drawHandle.toggle} position={'right'} title={<Title order={4} px={'xs'}>Sections</Title>}>
-          <Sections close={() => drawHandle.close()}/>
+          <TaskSections close={() => drawHandle.close()}/>
         </Drawer>
       </nav>
       <main>
         <Tasks />
       </main>
-    </MantineProvider>
+    </>
   );
 }
 
-export default App;
+export default Home;
