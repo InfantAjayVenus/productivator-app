@@ -1,7 +1,9 @@
 import { createSelector, createSlice, nanoid } from '@reduxjs/toolkit';
 import {SectionId, SectionItem} from '../../types/Section';
+import { randomColorGenerator } from '../../utils/colors';
 
-export const DEFAULT_SECTION_ID = "ALL" as SectionId
+export const DEFAULT_SECTION_ID = "ALL" as SectionId;
+const colorGenerator = randomColorGenerator();
 
 export const sectionSlice = createSlice({
     name: "sections",
@@ -25,9 +27,10 @@ export const sectionSlice = createSlice({
         addSection: (state, action) => {
             const newSectionName = action.payload;
             const newSection = {
-                id: nanoid(),
+                id: nanoid(4),
                 name: newSectionName,
-                timeStamp: Date.now()
+                timeStamp: Date.now(),
+                accent: colorGenerator.next().value
             }
             state.sectionsList = [...state.sectionsList, newSection];
             state.activeSectionId = newSection.id;

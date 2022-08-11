@@ -8,5 +8,6 @@ export declare type SectionId = String;
 export interface SectionItem {
     id: SectionId,
     name: String,
-    timeStamp: Number
+    timeStamp: Number,
+    accent?: String
 };
