@@ -15,7 +15,7 @@ function App() {
       withGlobalStyles
       withNormalizeCSS
     >
-      <Router>
+      <Router basename="/productivator-app">
         <NavContainer>
           <Tooltip label={'All Tasks'}>
             <NavLink to='/tasks' end>
