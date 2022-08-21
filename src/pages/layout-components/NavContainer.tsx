@@ -65,7 +65,6 @@ const useContaienrStyles = createStyles((theme, {height, isVisible}: {height: Nu
 const NavContainer = ({ children }) => {
     const {ref, entry} = useIntersection();
     const {height} = useViewportSize();
-    console.log(height);
     
     const { classes } = useContaienrStyles({height, isVisible: entry?.isIntersecting});
 
