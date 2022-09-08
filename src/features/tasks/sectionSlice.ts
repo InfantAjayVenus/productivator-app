@@ -12,7 +12,7 @@ export const sectionSlice = createSlice({
         sectionsList: [
             {
                 id: DEFAULT_SECTION_ID as SectionId,
-                name: "All Tasks" as String,
+                name: "Quick List" as String,
                 timeStamp: Date.now()
             }
         ] as SectionItem[]

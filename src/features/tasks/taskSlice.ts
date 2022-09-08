@@ -68,8 +68,6 @@ export const selectTasksList = createSelector([
   (state) => state.tasks.tasksList,
   (_, sectionId) => sectionId,
 ], (tasksList, sectionId) => {
-  if(sectionId === DEFAULT_SECTION_ID) return tasksList;
-
   return tasksList.filter(({sectionId: itemSectionId}) => itemSectionId === sectionId);
 });
 

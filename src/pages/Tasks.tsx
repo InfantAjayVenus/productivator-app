@@ -6,13 +6,14 @@ import {
   TextInput,
   ScrollArea,
   List,
-  Group,
   Menu,
   Stack,
+  Center,
+  Grid,
 } from "@mantine/core";
 import { useFocusTrap, useFocusReturn } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import { Dots, Plus, Trash } from "tabler-icons-react";
+import { DotsVertical, Plus, Trash } from "tabler-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useParams, useNavigate } from 'react-router-dom'
 import { addTask, selectTasksList } from "../features/tasks/taskSlice";
@@ -47,11 +48,36 @@ export default function Tasks() {
     <>
       <Container px={0}>
         <Stack p={'md'} style={{ borderTop: sectionId !== DEFAULT_SECTION_ID ? `0.5rem solid ${activeSection.accent || 'gray'}` : '' }}>
-          <Group position="apart" >
-            <Title order={4} >{activeSection.name}</Title>
-            {activeSection.id !== DEFAULT_SECTION_ID && (
+          <Center>
+            <Title order={4} align="center" >{activeSection.name}</Title>
+          </Center>
+          <Grid gutter={0} style={{width: '100%'}}>
+            <Grid.Col span={11}>
+              <form
+                onSubmit={form.onSubmit(({ task }) => {
+                  dispatch(addTask({ title: task, sectionId: activeSection.id }));
+                  form.reset();
+                  focusReturn();
+                })}
+              >
+                <TextInput
+                  ref={focusRef}
+                  {...form.getInputProps('task')}
+                  placeholder="Enter task here"
+                  style={{ width: "100%", padding: "0.25rem 0.5rem" }}
+                  rightSection={<ActionIcon color={"blue"} variant={"light"} type={"submit"}>
+                    <Plus />
+                  </ActionIcon>}
+                  autoFocus
+                  required
+                />
+              </form>
+            </Grid.Col>
+            <Grid.Col span={1}>
               <Menu withinPortal position="bottom-end">
-                <Menu.Target><ActionIcon><Dots /></ActionIcon></Menu.Target>
+                <Menu.Target>
+                  <ActionIcon style={{ maxWidth: '3rem', height: '100%' }}><DotsVertical /></ActionIcon>
+                </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Item
                     icon={<Trash />}
@@ -65,27 +91,8 @@ export default function Tasks() {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-            )}
-          </Group>
-          <form
-            onSubmit={form.onSubmit(({ task }) => {
-              dispatch(addTask({ title: task, sectionId: activeSection.id }));
-              form.reset();
-              focusReturn();
-            })}
-          >
-            <TextInput
-              ref={focusRef}
-              {...form.getInputProps('task')}
-              placeholder="Enter task here"
-              style={{ width: "100%", padding: "0.25rem 0.5rem" }}
-              rightSection={<ActionIcon color={"blue"} variant={"light"} type={"submit"}>
-                <Plus />
-              </ActionIcon>}
-              autoFocus
-              required
-            />
-          </form>
+            </Grid.Col>
+          </Grid>
         </Stack>
         <ScrollArea.Autosize maxHeight={'70.5vh'} px={'xs'}>
           <Flipper flipKey={taskList.map(({ id }) => id).join('')}>

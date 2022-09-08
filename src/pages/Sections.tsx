@@ -41,7 +41,7 @@ function TaskSections() {
               key={sectionItem.id as React.Key}
               my={'md'}
               style={{ width: '100%' }}>
-              <Card component={Link} to={`/tasks/${sectionItem.id}`} style={{borderLeft: `0.25rem solid ${sectionItem.accent || 'gray'}`}}>
+              <Card component={Link} to={`${sectionItem.id}`} style={{borderLeft: `0.25rem solid ${sectionItem.accent || 'gray'}`}}>
                 <Group position='apart'>
                   <Text weight={'600'} transform={'capitalize'} >{sectionItem.name}</Text>
                   <ThemeIcon variant='light' color={'gray'}><ChevronRight /* color={sectionItem.accent} */ /> </ThemeIcon>

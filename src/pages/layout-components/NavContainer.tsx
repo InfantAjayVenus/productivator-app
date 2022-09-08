@@ -11,19 +11,20 @@ const useContaienrStyles = createStyles((theme, {height, isVisible}: {height: Nu
         alignItems: 'center',
         justifyContent: 'space-evenly',
         position: 'fixed',
-        width: '90%',
-        padding: '0.3rem 0',
-        background: theme.colors.dark[6],
+        width: `calc(100% - ${theme.spacing.xs *2}px)`,
+        padding: `${theme.spacing.xs/2}px 0`,
+        margin: `0 ${theme.spacing.xs}px`,
+        background: `${theme.colors.dark[6]}`,
+        zIndex: 10,
         boxShadow: theme.shadows.md,
         borderRadius: theme.radius.md,
         top: `calc(${height}px - ${isVisible ? 5 : 7}rem)`,
-        left: '5%',
+        
 
         'a': {
             'button': {
                 height: '3rem',
                 width: '3rem',
-                color: theme.colors.dark[3]
             },
 
             '&.active': {
